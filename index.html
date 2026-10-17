@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>英语四六级备考平台</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<!-- 顶部导航 -->
+<header class="header">
+    <div class="header-inner">
+        <div class="logo">
+            <span class="logo-icon">📚</span>
+            <span>英语四六级备考平台</span>
+        </div>
+        <div class="user-info">
+            <span id="currentUserName">未登录</span>
+            <select id="userSelect" onchange="switchUser(this.value)">
+                <option value="">-- 选择用户 --</option>
+            </select>
+            <button class="btn btn-accent" onclick="showAddUserModal()" style="padding:6px 12px;font-size:13px;">+ 用户</button>
+        </div>
+    </div>
+</header>
+
+<!-- 主导航菜单 -->
+<nav class="nav">
+    <button class="nav-scroll-btn nav-scroll-left" onclick="scrollNav(-1)" id="navLeftBtn">‹</button>
+    <div class="nav-inner" id="navInner">
+        <button class="nav-btn active" data-page="home" onclick="showPage('home')">🏠 首页</button>
+        <button class="nav-btn" data-page="assess" onclick="showPage('assess')">📝 水平评估</button>
+        <button class="nav-btn" data-page="plan" onclick="showPage('plan')">📋 学习计划</button>
+        <button class="nav-btn" data-page="words" onclick="showPage('words')">📖 背单词</button>
+        <button class="nav-btn" data-page="quiz" onclick="showPage('quiz')">✍️ 真题刷题</button>
+        <button class="nav-btn" data-page="listening" onclick="showPage('listening')">🎧 听力练习</button>
+        <button class="nav-btn" data-page="exam" onclick="showPage('exam')">📝 模拟考试</button>
+        <button class="nav-btn" data-page="guide" onclick="showPage('guide')">📋 考试流程</button>
+        <button class="nav-btn" data-page="games" onclick="showPage('games')">🎮 英语小游戏</button>
+        <button class="nav-btn" data-page="progress" onclick="showPage('progress')">📊 学习进度</button>
+    </div>
+    <button class="nav-scroll-btn nav-scroll-right" onclick="scrollNav(1)" id="navRightBtn">›</button>
+</nav>
+
+<!-- 主内容区 -->
+<main class="container">
+
+    <!-- 首页 -->
+    <section id="page-home" class="page active">
+        <div class="card">
+            <h2 style="margin-bottom:8px;">👋 欢迎使用英语四六级备考平台</h2>
+            <p style="color:var(--text-light);">一站式备考，助你轻松通过四六级！</p>
+        </div>
+
+        <div class="grid grid-3" id="homeStats" style="margin-bottom:20px;">
+            <!-- 统计数据由JS填充 -->
+        </div>
+
+        <div class="card">
+            <div class="card-title">🚀 快速开始</div>
+            <div class="grid grid-3">
+                <div class="feature-card" onclick="showPage('assess')">
+                    <div class="feature-icon">📝</div>
+                    <div class="feature-title">水平评估</div>
+                    <div class="feature-desc">8道题快速测出你的英语水平</div>
+                </div>
+                <div class="feature-card" onclick="showPage('words')">
+                    <div class="feature-icon">📖</div>
+                    <div class="feature-title">背单词</div>
+                    <div class="feature-desc">四六级高频词汇，科学记忆</div>
+                </div>
+                <div class="feature-card" onclick="showPage('quiz')">
+                    <div class="feature-icon">✍️</div>
+                    <div class="feature-title">真题刷题</div>
+                    <div class="feature-desc">四六级真题，含详细解析</div>
+                </div>
+                <div class="feature-card" onclick="showPage('listening')">
+                    <div class="feature-icon">🎧</div>
+                    <div class="feature-title">听力练习</div>
+                    <div class="feature-desc">精听训练，提升听力水平</div>
+                </div>
+                <div class="feature-card" onclick="showPage('games')">
+                    <div class="feature-icon">🎮</div>
+                    <div class="feature-title">英语小游戏</div>
+                    <div class="feature-desc">边玩边学，轻松记单词</div>
+                </div>
+                <div class="feature-card" onclick="showPage('progress')">
+                    <div class="feature-icon">📊</div>
+                    <div class="feature-title">学习进度</div>
+                    <div class="feature-desc">查看学习数据，调整计划</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-title">💡 备考小贴士</div>
+            <ul style="padding-left:20px;line-height:2;color:var(--text-light);">
+                <li>每天坚持背单词，重复记忆效果更好</li>
+                <li>听力要精听+泛听结合，先听题再看原文</li>
+                <li>阅读要限时训练，培养做题速度</li>
+                <li>写作和翻译要动手写，不能只看范文</li>
+                <li>每周做一套完整真题，模拟考试环境</li>
+            </ul>
+        </div>
+    </section>
+
+    <!-- 水平评估页 -->
+    <section id="page-assess" class="page">
+        <div class="card">
+            <div class="card-title">📝 英语水平评估问卷</div>
+            <p style="color:var(--text-light);margin-bottom:20px;">认真回答以下8个问题，系统会根据你的情况生成个性化学习计划。</p>
+            <div id="assessmentContainer"></div>
+            <div style="margin-top:20px;text-align:center;">
+                <button class="btn btn-primary btn-lg" onclick="submitAssessment()">提交评估</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- 学习计划页 -->
+    <section id="page-plan" class="page">
+        <div id="planContent">
+            <div class="card" style="text-align:center;padding:60px 20px;">
+                <div style="font-size:60px;margin-bottom:16px;">📋</div>
+                <h2 style="margin-bottom:12px;">还没有你的学习计划</h2>
+                <p style="color:var(--text-light);margin-bottom:20px;">请先完成「水平评估」，系统会为你生成个性化学习计划</p>
+                <button class="btn btn-primary btn-lg" onclick="showPage('assess')">去做评估</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- 背单词页 -->
+    <section id="page-words" class="page">
+        <div class="card">
+            <div class="card-title">📖 背单词</div>
+            <div style="display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap;">
+                <label>选择词库：</label>
+                <select id="wordBankSelect" onchange="loadWordBank()" style="padding:8px;border-radius:8px;border:2px solid var(--border);">
+                    <option value="cet4full">四级完整词库（4544词·开源词库·含音标）</option>
+                    <option value="cet6full">六级完整词库（3991词·开源词库·含音标）</option>
+                    <option value="cet4">四级高频词（754词）</option>
+                    <option value="cet4syl">四级考纲词（107词）</option>
+                    <option value="cet6">六级高频词（1051词）</option>
+                    <option value="cet6syl">六级考纲词（101词）</option>
+                </select>
+                <label style="margin-left:10px;">显示：</label>
+                <select id="wordViewMode" onchange="updateWordDisplay()" style="padding:8px;border-radius:8px;border:2px solid var(--border);">
+                    <option value="word">只看单词</option>
+                    <option value="both">单词+释义</option>
+                    <option value="cn">只看释义</option>
+                </select>
+            </div>
+            <div class="word-card" id="wordCard" onclick="toggleWordMeaning()">
+                <div class="word-en" id="wordEn">点击开始</div>
+                <div class="word-phonetic" id="wordPhonetic" style="display:none;"></div>
+                <div onclick="event.stopPropagation();" style="margin:8px 0;">
+                    <button class="btn btn-primary" onclick="speakCurrentWord()" style="border-radius:24px;padding:8px 18px;">🔊 朗读单词</button>
+                    <label style="margin-left:12px;font-size:14px;color:var(--text-light);cursor:pointer;">
+                        <input type="checkbox" id="autoSpeak" onchange="saveAutoSpeak()" style="cursor:pointer;"> 自动朗读
+                    </label>
+                </div>
+                <div class="word-cn" id="wordCn" style="display:none;"></div>
+                <div class="word-example" id="wordExample" style="display:none;"></div>
+            </div>
+            <div style="display:flex;gap:10px;justify-content:center;margin-top:16px;flex-wrap:wrap;">
+                <button class="btn btn-outline" onclick="prevWord()">⬅️ 上一个</button>
+                <button class="btn btn-primary" onclick="markKnown()">✅ 认识</button>
+                <button class="btn btn-accent" onclick="markUnknown()">❓ 不认识</button>
+                <button class="btn btn-outline" onclick="nextWord()">下一个 ➡️</button>
+            </div>
+            <div style="margin-top:16px;text-align:center;">
+                <span id="wordProgress" style="color:var(--text-light);"></span>
+            </div>
+        </div>
+    </section>
+
+    <!-- 真题刷题页 -->
+    <section id="page-quiz" class="page">
+        <div class="card">
+            <div class="card-title">✍️ 真题套卷（整套练习）</div>
+            <p style="color:var(--text-light);margin-bottom:14px;">按真实试卷结构组织：写作 → 听力 → 阅读 → 翻译。选择级别、考期和套卷开始练习，客观题选完即判对错。</p>
+            <div style="display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap;align-items:center;">
+                <label>级别：</label>
+                <select id="paperLevel" onchange="renderPaperPicker()" style="padding:8px;border-radius:8px;border:2px solid var(--border);">
+                    <option value="cet4">四级 CET-4</option>
+                    <option value="cet6">六级 CET-6</option>
+                    <option value="quality">优质题库（随机练习）</option>
+                </select>
+                <label>考期：</label>
+                <select id="paperYear" onchange="renderPaperPicker()" style="padding:8px;border-radius:8px;border:2px solid var(--border);"></select>
+                <label>套卷：</label>
+                <select id="paperSet" style="padding:8px;border-radius:8px;border:2px solid var(--border);"></select>
+                <button class="btn btn-primary" onclick="openPaper()">📖 打开这套卷</button>
+                <span id="quizProgress" style="margin-left:auto;color:var(--text-light);"></span>
+            </div>
+            <div id="quizContainer"></div>
+        </div>
+    </section>
+
+    <!-- 听力练习页 -->
+    <section id="page-listening" class="page">
+        <div class="card">
+            <div class="card-title">🎧 听力练习</div>
+            <div style="display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap;align-items:center;">
+                <label>选择材料：</label>
+                <select id="listeningSelect" onchange="loadListening()" style="padding:8px;border-radius:8px;border:2px solid var(--border);">
+                </select>
+            </div>
+            <div id="listeningContainer"></div>
+        </div>
+    </section>
+
+    <!-- 模拟考试页 -->
+    <section id="page-exam" class="page">
+        <div class="card">
+            <div class="card-title">📝 全真模拟考试（四级125分钟 / 六级130分钟 · 710分制）</div>
+            <p style="color:var(--text-light);margin-bottom:16px;">完全按真实考试流程：<b>写作30分钟 → 听力（只播一遍）→ 阅读40分钟 → 翻译30分钟</b>，阶段自动切换、不可提前翻看其他部分。建议戴上耳机，找个安静的环境。</p>
+            <div id="examConfig" style="display:flex;gap:16px;align-items:center;flex-wrap:wrap;margin-bottom:16px;">
+                <label>选择级别：</label>
+                <select id="examLevel" onchange="renderExamSetOptions()" style="padding:8px;border-radius:8px;border:2px solid var(--border);">
+                    <option value="cet4">四级模拟</option>
+                    <option value="cet6">六级模拟</option>
+                </select>
+                <label>选择真题套卷：</label>
+                <select id="examPaperSet" style="padding:8px;border-radius:8px;border:2px solid var(--border);"></select>
+                <button class="btn btn-primary" id="startExamBtn" onclick="startExam()">🚀 开始考试</button>
+                <button class="btn btn-danger" id="submitExamBtn" onclick="submitExam()" style="display:none;">✅ 提前交卷</button>
+                <span id="examTimer" style="font-size:24px;font-weight:bold;color:var(--primary);margin-left:auto;display:none;">⏱️ 总剩余 <span id="examTime">130:00</span></span>
+            </div>
+            <div id="examStageBar"></div>
+            <div id="examContainer"></div>
+            <div id="examResult" style="margin-top:20px;"></div>
+        </div>
+    </section>
+
+    <!-- 考试流程页 -->
+    <section id="page-guide" class="page">
+        <div class="card">
+            <div class="card-title">📋 四六级考试流程详解</div>
+            <p style="color:var(--text-light);margin-bottom:16px;">了解考试流程，避免临场慌乱，从容应对四六级！</p>
+
+            <h3 style="color:var(--primary);margin-bottom:12px;">⏰ 四级考试时间安排（125分钟）</h3>
+            <div style="background:var(--bg);padding:16px;border-radius:10px;margin-bottom:20px;line-height:2;">
+                <div>📍 <b>8:40-9:00</b> 考生入场，试音时间（15分钟）</div>
+                <div>📍 <b>9:00-9:10</b> 发答题卡，条形码粘贴</div>
+                <div>📍 <b>9:10-9:40</b> 作文（30分钟，写作部分）</div>
+                <div>📍 <b>9:40-10:05</b> 听力（25分钟，结束后立即收答题卡1）</div>
+                <div>📍 <b>10:05-11:20</b> 阅读+翻译（75分钟）</div>
+                <div>📍 <b>11:20</b> 考试结束，收答题卡2</div>
+            </div>
+
+            <h3 style="color:var(--primary);margin-bottom:12px;">⏰ 六级考试时间安排（130分钟）</h3>
+            <div style="background:var(--bg);padding:16px;border-radius:10px;margin-bottom:20px;line-height:2;">
+                <div>📍 <b>14:40-15:00</b> 考生入场，试音时间（15分钟）</div>
+                <div>📍 <b>15:00-15:10</b> 发答题卡，条形码粘贴</div>
+                <div>📍 <b>15:10-15:40</b> 作文（30分钟，写作部分）</div>
+                <div>📍 <b>15:40-16:10</b> 听力（30分钟，结束后立即收答题卡1）</div>
+                <div>📍 <b>16:10-17:25</b> 阅读+翻译（75分钟）</div>
+                <div>📍 <b>17:25</b> 考试结束，收答题卡2</div>
+            </div>
+
+            <h3 style="color:var(--primary);margin-bottom:12px;">📐 四级题型分值分布</h3>
+            <div style="background:var(--bg);padding:16px;border-radius:10px;margin-bottom:20px;line-height:2;">
+                <div>✍️ <b>写作</b>：1篇，106.5分（15%）</div>
+                <div>🎧 <b>听力理解</b>：25题，248.5分（35%）</div>
+                <div>📖 <b>阅读理解</b>：30题，248.5分（35%）</div>
+                <div>🌐 <b>翻译</b>：1段，106.5分（15%）</div>
+                <div style="margin-top:8px;color:var(--primary);font-weight:bold;">总分：710分，及格线：425分</div>
+            </div>
+
+            <h3 style="color:var(--primary);margin-bottom:12px;">📐 六级题型分值分布</h3>
+            <div style="background:var(--bg);padding:16px;border-radius:10px;margin-bottom:20px;line-height:2;">
+                <div>✍️ <b>写作</b>：1篇，106.5分（15%）</div>
+                <div>🎧 <b>听力理解</b>：30题，248.5分（35%）</div>
+                <div>📖 <b>阅读理解</b>：30题，248.5分（35%）</div>
+                <div>🌐 <b>翻译</b>：1段，106.5分（15%）</div>
+                <div style="margin-top:8px;color:var(--primary);font-weight:bold;">总分：710分，及格线：425分</div>
+            </div>
+
+            <h3 style="color:var(--primary);margin-bottom:12px;">💡 考试注意事项</h3>
+            <div style="background:var(--bg);padding:16px;border-radius:10px;line-height:2;">
+                <div>1️⃣ 提前30分钟到达考场，带好<b>准考证、身份证、学生证</b></div>
+                <div>2️⃣ 自备<b>2B铅笔、黑色签字笔、橡皮</b>，听力需自备<b>调频耳机</b></div>
+                <div>3️⃣ 作文和听力在<b>答题卡1</b>上作答，听力结束后立即回收</div>
+                <div>4️⃣ 阅读和翻译在<b>答题卡2</b>上作答</div>
+                <div>5️⃣ 听力开始前快速浏览选项，边听边涂卡</div>
+                <div>6️⃣ 合理分配时间，阅读建议：选词填空7分钟、匹配15分钟、仔细阅读18分钟</div>
+                <div>7️⃣ 翻译注意中国特色词汇的表达，如春节、长城、京剧等</div>
+                <div>8️⃣ 考试结束前5分钟检查答题卡是否填涂完整</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 小游戏页 -->
+    <section id="page-games" class="page">
+        <div class="card">
+            <div class="card-title">🎮 英语小游戏</div>
+            <p style="color:var(--text-light);margin-bottom:16px;">学累了？来玩个小游戏放松一下，边玩边记单词！</p>
+            <div class="grid grid-3" style="margin-bottom:20px;">
+                <div class="feature-card" onclick="startGame('spelling')">
+                    <div class="feature-icon">✏️</div>
+                    <div class="feature-title">单词拼写</div>
+                    <div class="feature-desc">看中文，拼写出对应的英文单词</div>
+                </div>
+                <div class="feature-card" onclick="startGame('matching')">
+                    <div class="feature-icon">🃏</div>
+                    <div class="feature-title">单词消消乐</div>
+                    <div class="feature-desc">翻牌匹配英文和中文释义</div>
+                </div>
+                <div class="feature-card" onclick="startGame('choice')">
+                    <div class="feature-icon">🎯</div>
+                    <div class="feature-title">词义选择</div>
+                    <div class="feature-desc">看单词，选择正确的中文释义</div>
+                </div>
+                <div class="feature-card" onclick="startGame('decrypt')">
+                    <div class="feature-icon">🔓</div>
+                    <div class="feature-title">单词解密</div>
+                    <div class="feature-desc">把打乱的字母重新排列成正确单词</div>
+                </div>
+                <div class="feature-card" onclick="startGame('sentence')">
+                    <div class="feature-icon">🧩</div>
+                    <div class="feature-title">句子排序</div>
+                    <div class="feature-desc">按正确顺序点击单词，组成完整句子</div>
+                </div>
+                <div class="feature-card" onclick="startGame('riddle')">
+                    <div class="feature-icon">🧠</div>
+                    <div class="feature-title">英语谜语</div>
+                    <div class="feature-desc">猜猜趣味英语谜语的答案</div>
+                </div>
+                <div class="feature-card" onclick="startGame('match3')">
+                    <div class="feature-icon">💎</div>
+                    <div class="feature-title">单词消消乐</div>
+                    <div class="feature-desc">交换相邻单词，三个连成线即可消除</div>
+                </div>
+                <div class="feature-card" onclick="startGame('grass')">
+                    <div class="feature-icon">⚔️</div>
+                    <div class="feature-title">单词割草</div>
+                    <div class="feature-desc">肉鸽风格，走位击杀单词怪物</div>
+                </div>
+                <div class="feature-card" onclick="startGame('racing')">
+                    <div class="feature-icon">🏎️</div>
+                    <div class="feature-title">单词赛车</div>
+                    <div class="feature-desc">按词性选择岔路，选错或超时即失败</div>
+                </div>
+                <div class="feature-card" onclick="startGame('cat')">
+                    <div class="feature-icon">🐱</div>
+                    <div class="feature-title">喂养小猫</div>
+                    <div class="feature-desc">用单词照顾小猫，处理各种生活事件</div>
+                </div>
+            </div>
+            <div id="gameContainer"></div>
+        </div>
+    </section>
+
+    <!-- 学习进度页 -->
+    <section id="page-progress" class="page">
+        <div class="card">
+            <div class="card-title">📊 学习进度</div>
+            <div id="progressContent"></div>
+        </div>
+        <div class="card">
+            <div class="card-title">⚙️ 数据管理</div>
+            <div style="display:flex;gap:10px;flex-wrap:wrap;">
+                <button class="btn btn-outline" onclick="exportData()">📤 导出数据</button>
+                <button class="btn btn-outline" onclick="document.getElementById('importFile').click()">📥 导入数据</button>
+                <input type="file" id="importFile" accept=".json" style="display:none;" onchange="importData(event)">
+                <button class="btn btn-accent" onclick="resetCurrentUserData()">🔄 重置当前用户数据</button>
+                <button class="btn btn-outline" onclick="deleteCurrentUser()">🗑️ 删除当前用户</button>
+            </div>
+            <p style="color:var(--text-light);font-size:13px;margin-top:12px;">
+                💡 提示：数据保存在你的浏览器中，换浏览器或清理缓存会丢失。建议定期导出备份。
+            </p>
+        </div>
+    </section>
+
+</main>
+
+<!-- 底部 -->
+<footer class="footer">
+    <p>英语四六级备考平台 | 数据保存在本地浏览器 | 加油，你一定行！💪</p>
+</footer>
+
+<!-- 添加用户弹窗 -->
+<div id="addUserModal" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:999;align-items:center;justify-content:center;">
+    <div style="background:white;padding:24px;border-radius:12px;min-width:300px;max-width:90%;">
+        <h3 style="margin-bottom:16px;">添加新用户</h3>
+        <div class="form-group">
+            <label>用户名</label>
+            <input type="text" id="newUserName" placeholder="输入你的名字">
+        </div>
+        <div style="display:flex;gap:10px;justify-content:flex-end;">
+            <button class="btn btn-ghost" onclick="hideAddUserModal()">取消</button>
+            <button class="btn btn-primary" onclick="addUser()">确认添加</button>
+        </div>
+    </div>
+</div>
+
+<script src="js/data.js"></script>
+<script src="js/dictbank.js"></script>
+<script src="js/papers.js"></script>
+<script src="js/app.js"></script>
+<script src="js/papers-ui.js"></script>
+<script src="js/exam.js"></script>
+
+</body>
+</html>
